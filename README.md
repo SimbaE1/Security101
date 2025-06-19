@@ -20,7 +20,7 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/security101.git
+   git clone https://github.com/SimbaE1/security101.git
    cd security101
    ```
 2. **Create and activate a Python virtual environment:**
