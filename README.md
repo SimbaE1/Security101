@@ -1,20 +1,21 @@
 # Security101: Mac Surveillance System
 
-**Security101** is a Python-based face-recognition surveillance tool for macOS. It monitors a specified camera feed, detects unauthorized people, and sends real-time alerts via FaceTime Audio calls and iMessage with images.
+**Security101** monitors a webcam on macOS, detects unauthorized people in real time, and immediately alerts you via FaceTime Audio calls and iMessage with snapshots.
 
 ## Features
-- Continuous face recognition using the `face_recognition` library
-- Automated image capture of unidentified or unauthorized individuals
-- Real-time FaceTime Audio call alerts (requires Apple Developer setup)
-- Real-time iMessage alerts with attached images
-- Ignoring non-face images and handling files with multiple faces
-- Extensible architecture for custom notification channels
+- Continuous face detection and recognition using the `face_recognition` library
+- Automatic removal of images with no or multiple faces
+- Real-time FaceTime Audio call alerts when an unknown face is detected
+- Real-time iMessage alerts with captured face images
+- Easy training data capture for adding new known faces
 
 ## Requirements
-- macOS 10.14+ with webcam support
-- Python 3.8 or higher
-- Homebrew (for installing dependencies)
-- An Apple Developer account for FaceTime Audio (optional)
+- macOS 10.14 or later with a functional webcam
+- Python 3.8 or newer
+- Installed Python dependencies: `face_recognition`, `opencv-python`
+- Your Mac signed into your Apple ID for Messages and FaceTime
+- Camera & screen‑recording permissions granted in System Settings
+
 
 ## Installation
 
@@ -32,46 +33,22 @@
    ```bash
    pip install -r requirements.txt
    ```
-4. **Install system dependencies via Homebrew:**
+4. **Install system dependencies via Homebrew (for camera and audio tools):**
    ```bash
    brew install ffmpeg
    ```
 
-## Configuration
+## Commands
+- `python recognition.py`
+  - Launches the surveillance loop: opens the webcam, performs face recognition, and issues alerts.
+- `python recognition.py --help`
+  - Displays available options for the surveillance script (e.g., customizing tolerance or camera index).
+- `python capture_faces.py --name <PersonName> --count <N>`
+  - Opens a capture window; press **c** to save up to N images for the specified person under `known_people_folder/PersonName/`.
+- `python capture_faces.py --help`
+  - Shows usage details and options for the capture script.
 
-1. **Copy the example config:**
-   ```bash
-   cp config.example.yaml config.yaml
-   ```
-2. **Edit `config.yaml`** and set:
-   - `camera_index`: Index of the webcam (usually `0`)
-   - `authorized_faces_dir`: Directory path with images of authorized individuals
-   - `your_phone_number`: Your mobile number in E.164 format for FaceTime and iMessage
-
-## Usage
-
-Run the main surveillance script:
-```bash
-python surveillance.py
-```
-- The script will log detections to `logs/` and save captured images to `captures/`.
-- Unauthorized faces trigger a FaceTime Audio call and an iMessage containing captured images automatically.
-
-## Adding Images to Existing Faces
-- If a detected face matches an existing person, new images are added to their folder instead of overwriting.
-- Ignored files (no faces or multiple faces) are removed automatically to keep the dataset clean.
-
-## Custom Notifications
-
-To add new notification channels, extend the `notifiers/` module:
-1. Create a new notifier class inheriting from `BaseNotifier`.
-2. Implement `send_alert(image_path: str, message: str)`.
-3. Register your notifier in `config.yaml`.
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License. See `LICENSE` for details.
+## Notes
+- Ensure you set `YOUR_PHONE_NUMBER` in `recognition.py` to your mobile number in E.164 format.
+- For clear recognition results, provide good-quality, well-lit face images when capturing training data.
+- If you need to adjust detection sensitivity or camera device, use the `--help` flags to customize parameters.
